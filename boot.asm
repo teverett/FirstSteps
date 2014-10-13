@@ -4,7 +4,8 @@
 
 [ORG 0x7C00]                    ; The BIOS loads the boot sector into memory location 0x7C00
 
-jmp word load_kernel            ; Load the OS Kernel
+_start:
+        jmp word load_kernel    ; Load the OS Kernel
 
 ;----------Fat 12 Header junk----------;
 
@@ -21,14 +22,39 @@ jmp word load_kernel            ; Load the OS Kernel
         dw 2                    ; Head count (double sided)
         dd 0                    ; Hidden sector count 
         
-drive db 0                      ; Used to store boot device
-        
+drive   db 0                      ; Used to store boot device
+
+welcome         db "First Steps...",13,10,0        
+readdisk        db "Read disk",13,10,0
+
 ;----------Bootsector Code----------;
   
 load_kernel:
+        call clear              ; our routine to clear the screen
+
+        mov si, welcome         ; load the welcome message
+        call puts               ; call our puts function
+
         jmp read_disk           ; Load the OS into memory
-        jmp enter_pm            ; Enter Protected Mode
-        
+        hlt
+
+clear:                          ; clear the screen via an interrupt
+        mov     al, 02h         ; al = 02h, code for video mode (80x25)
+        mov     ah, 00h         ; code for the change video mode function
+        int     10h             ; trigger interrupt to call function
+        ret
+                               
+puts:                           ; print a line of text to the screen via an interrupt
+        mov ah, 0Eh             ; set interrupt function => print to screen
+.repeat:
+        lodsb                   ; loads the next character into al
+        cmp al, 0               ; compare al to 0 (nul terminator check)
+        je .done                ; "jump equal" to .done label
+        int 10h                 ; triggers an interrupt to push out the byte
+        jmp .repeat             ; jump back to the repeat, this is how we loop
+.done:
+        ret
+
 read_disk:
         mov ah, 0               ; RESET-command
         int 13h                 ; Call interrupt 13h
@@ -51,6 +77,9 @@ read_disk:
         jnz load_kernel         ; Try again if ah != 0
         cli                     ; Disable interrupts, we want to be alone
 
+        mov si, readdisk        ; load the read disk message
+        call puts               ; call our puts function
+
 enter_pm:
         xor ax, ax              ; Clear AX register
         mov ds, ax              ; Set DS-register to 0 - used by lgdt
@@ -65,7 +94,6 @@ enter_pm:
         
         jmp 08h:kernel_segments ; Jump to code segment, offset kernel_segments
         
-
 [BITS 32]                       ; We now need 32-bit instructions
 kernel_segments:
         mov ax, 10h             ; Save data segment identifyer
