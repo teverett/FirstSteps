@@ -1,24 +1,30 @@
 
 #include "video.h"
 
-/* Simple putc */
-int x, y; /* Our global 'x' and 'y' */
-char color; /* Our global color attribute */
-void putc( unsigned char c )
+void clear()
 {
-  char *vidmem = (char*)0xB8000; /* pointer to video memory */
-  int pos = ( y * 2 ) + x; /* Get the position */
-  vidmem[pos]   = c; /* print the character */
-  vidmem[pos++] = color; /* Set the color attribute */
+  	char *vidptr = (char*)0xb8000; 	//video mem begins here.
+	unsigned int i = 0;
+	unsigned int j = 0;
+	//clear all
+	while(j < 80 * 25 * 2) {
+		//blank character
+		vidptr[j] = ' ';
+		//attribute-byte: light grey on black screen	
+		vidptr[j+1] = 0x07; 		
+		j = j + 2;
+	}
 }
 
-int puts( char *message )
+void showstring(char* message)
 {
-  int length;
-  while(*message)
-  {
-    putc(*message++);
-    length++;
-  }
-  return length;
+  	char *vidptr = (char*)0xb8000; 	//video mem begins here.
+	unsigned int i = 0;
+	unsigned int j = 0;
+	while(message[j] != '\0') {
+		vidptr[i] = message[j];
+		vidptr[i+1] = 0x07;
+		++j;
+		i = i + 2;
+	}
 }

@@ -1,8 +1,11 @@
 
 #include "video.h"
 
-int main( void )
+void main( void )
 {
-  puts("Hello, world!"); /* Print our welcome message */
+    char *str = "my first kernel";
+	clear();
+	showstring(str);
+
   for(;;); /* Keep the OS running */
 }

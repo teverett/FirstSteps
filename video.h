@@ -1,10 +1,7 @@
-#ifndef VIDEO_H
-#define VIDEO_H
+#ifndef _VIDEO_H
+#define _VIDEO_H
 
-int puts( char *message );
-void putc( unsigned char c );
+void clear();
+void showstring(char* message);
 
 #endif
-
-
-
