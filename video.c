@@ -1,3 +1,6 @@
+
+#include "video.h"
+
 /* Simple putc */
 int x, y; /* Our global 'x' and 'y' */
 char color; /* Our global color attribute */

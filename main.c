@@ -1,3 +1,6 @@
+
+#include "video.h"
+
 int main( void )
 {
   puts("Hello, world!"); /* Print our welcome message */
