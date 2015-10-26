@@ -3,6 +3,8 @@ FirstSteps
 
 The complete source code from [this](https://code.google.com/p/kryos-dev/wiki/FirstStep) excellent GoogleCode article
 
+The original article from GoogleCode is included as [Article.md](Article.md)
+
 Travis Status
 ---------
 
