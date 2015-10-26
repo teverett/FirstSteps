@@ -8,7 +8,7 @@ kernel.bin: kernel.elf
 	objcopy -R .note -R .comment -S -O binary kernel.elf kernel.bin
 kernel.elf: loader.o main.c video.c
 	cc -m32  -ffreestanding -fno-builtin -nostdlib -c *.c
-	ld -melf_i386_fbsd -Ttext 0x1000 -o kernel.elf loader.o main.o video.o
+	ld -melf_i386 -Ttext 0x1000 -o kernel.elf loader.o main.o video.o
 boot.bin: boot.asm
 	nasm -f bin boot.asm -o boot.bin
 clean:
