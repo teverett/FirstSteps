@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: '*'
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install-prereqs
+        run: sudo apt install -y make nasm
+
+      - name: build
+        run: make
+
+  build-osx:
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install-prereqs
+        run: brew install nasm binutils
+        
+      - name: build
+        run: make
